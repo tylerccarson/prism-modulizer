@@ -18,16 +18,15 @@ const block = document.getElementById('block');
   document.addEventListener('mouseup', stopTransform);
   document.addEventListener('touchend', stopTransform);
 
+  var timer = null;
   document.addEventListener('wheel', function (e) {
-    //min zoom of 0.8, max of 5.0, scale of deltaY/100
-    zoom += e.deltaY > 0 ? (zoom <= 10.0 ? e.deltaY / 100 : 0) : (zoom >= 0.5 ? e.deltaY / 10 : 0);
+    //apply zoom: min zoom of 0.1, max of 1.0
+    zoom += e.deltaY > 0 ? (zoom <= 10.0 ? e.deltaY / 50 : 0) : (zoom >= 0.1 ? e.deltaY / 10 : 0);
+    block.style.transform = `scale(${zoom}) rotateX(${-rotateY*10}deg) rotateY(${-rotateX*10}deg) rotateZ(0deg)`;
 
-    console.log('deltaY: ', e.deltaY);
-    console.log('zoom: ', zoom);
-
-    function applyZoom(){
-      block.style.transform = `scale(${zoom}) rotateX(${-rotateY*10}deg) rotateY(${-rotateX*10}deg) rotateZ(0deg)`;
-    }
+    //set timer to reset on wheel/scroll end
+    if (timer !== null) clearTimeout(timer);
+    timer = setTimeout(resetCubeZoom, 150);
   });
 
 })();
@@ -62,7 +61,7 @@ function resetCubeRotation() {
 
 function resetCubeZoom() {
   zoom = 0.75;
-  block.style.transform = `scale(${zoom}) rotateX(${0}deg) rotateY(${0}deg) rotateZ(0deg)`;
+  block.style.transform = `scale(${zoom}) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(0deg)`;
 }
 
 function dragListener(e) {
