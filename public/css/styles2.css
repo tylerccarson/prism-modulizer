@@ -1,0 +1,67 @@
+body {
+  background: #2D45E0;
+  font-family:sans-serif;   
+  font-size: 3em;
+  color:white;
+  overflow: hidden;
+}
+
+.container {
+  height:100%;
+  position: absolute;
+  top: 30%;
+  left: 40%;
+}
+
+.dice {
+  position:relative;
+  margin:0 auto;
+  height:200px;
+  width:200px;
+  transform-style:preserve-3d;
+  transform: scale(0.75);
+}
+
+img{
+  width: 90%;
+}
+
+.side {
+  position: absolute;
+  height:200px;
+  width:200px;
+  opacity: 1;
+  background:white;
+  transition: .5s;
+}
+
+.one {
+  transform: rotateX(60deg) rotate(45deg) translateZ(100px);
+  background:#DAF7A6;
+}
+.two {
+  transform: rotateX(-30deg) rotateY(45deg) translateZ(100px);
+  background:#FFC300;
+}
+.three {
+  transform: rotateX(-30deg) rotateY(135deg) translateZ(100px);
+  background:#FF5733;
+}
+.four {
+  transform: rotateX(-30deg) rotateY(225deg) translateZ(100px);
+  background:#C70039;
+}
+.five {
+  transform: rotateX(-30deg) rotateY(-45deg) translateZ(100px);
+  background:#04FBDD;
+}
+.six {
+  transform: rotateX(-120deg) rotate(45deg) translateZ(100px);
+  background:#04FB07;
+}
+
+div.container {
+   text-align: center;
+   vertical-align: middle;
+   line-height: 150px;
+}
