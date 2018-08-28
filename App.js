@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, NativeModules} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, NativeModules} from 'react-native';
 
 const SuperpoweredModule = NativeModules.SuperpoweredModule;
 
@@ -21,7 +21,6 @@ const instructions = Platform.select({
 export default class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       init: null
     };
@@ -33,9 +32,7 @@ export default class App extends Component {
 
   async init() {
     try {
-      console.log('hello world!');
       let init = await SuperpoweredModule.init();
-
       this.setState({ init });
     } catch (e) {
       console.error(e);
@@ -70,3 +67,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+AppRegistry.registerComponent('App', () => App);

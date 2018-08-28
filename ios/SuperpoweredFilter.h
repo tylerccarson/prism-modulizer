@@ -11,11 +11,14 @@ typedef enum SuperpoweredFilterType {
     SuperpoweredFilter_Bandlimited_Notch,
     SuperpoweredFilter_LowShelf,
     SuperpoweredFilter_HighShelf,
-    SuperpoweredFilter_Parametric
+    SuperpoweredFilter_Parametric,
+    SuperpoweredFilter_CustomCoefficients
 } SuperpoweredFilterType;
 
 /**
- @brief IIR filters.
+ @brief SuperpoweredFilter is an IIR filter based on the typical direct form 1 formula:
+ 
+ y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2] - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]
  
  It doesn't allocate any internal buffers and needs just a few bytes of memory.
  
@@ -38,18 +41,32 @@ public:
     
 /**
  @brief Change parameters for resonant filters.
+
+ @param frequency The frequency in Hz.
+ @param resonance Resonance value.
  */
     void setResonantParameters(float frequency, float resonance);
 /**
  @brief Change parameters for shelving filters.
+
+ @param frequency The frequency in Hz.
+ @param slope Slope.
+ @param dbGain Gain in decibel.
  */
     void setShelfParameters(float frequency, float slope, float dbGain);
 /**
  @brief Change parameters for bandlimited filters.
+
+ @param frequency The center frequency in Hz.
+ @param octaveWidth Width in octave.
  */
     void setBandlimitedParameters(float frequency, float octaveWidth);
 /**
  @brief Change parameters for parametric filters.
+
+ @param frequency The center frequency in Hz.
+ @param octaveWidth Width in octave.
+ @param dbGain Gain in decibel.
  */
     void setParametricParameters(float frequency, float octaveWidth, float dbGain);
     
@@ -74,11 +91,20 @@ public:
 /**
  @brief Set params and type at once for bandlimited filters.
  
- @param frequency The frequency in Hz.
- @param octaveWidth Width in octave.
+ @param frequency The center frequency in Hz.
+ @param octaveWidth Width in octave. (Min 0.1, max 5.)
  @param type Must be bandpass or notch.
  */
     void setBandlimitedParametersAndType(float frequency, float octaveWidth, SuperpoweredFilterType type);
+
+/**
+ @brief Set custom coefficients for the filter.
+ 
+ Coefficient changes will be smoothly handled.
+ 
+ @param coefficients Pointer to the 5 coefficients of the first direct form IIR filter in this order: b0, b1, b2, a0, a1
+ */
+    void setCustomCoefficients(float *coefficients);
     
 /**
  @brief Turns the effect on/off.
@@ -111,9 +137,20 @@ public:
  
  @param input 32-bit interleaved stereo input buffer. Can point to the same location with output (in-place processing).
  @param output 32-bit interleaved stereo output buffer. Can point to the same location with input (in-place processing).
- @param numberOfSamples Should be 32 minimum.
+ @param numberOfSamples Number of frames to process. Recommendations for best performance: multiply of 4, minimum 64.
 */
     bool process(float *input, float *output, unsigned int numberOfSamples);
+
+/**
+ @brief Processes mono audio.
+
+ @return Put something into output or not.
+
+ @param input 32-bit input buffer. Can point to the same location with output (in-place processing).
+ @param output 32-bit output buffer. Can point to the same location with input (in-place processing).
+ @param numberOfSamples Number of frames to process. Recommendations for best performance: multiply of 8, minimum 64.
+*/
+    bool processMono(float *input, float *output, unsigned int numberOfSamples);
 
 protected:
     filterInternals *internals;
