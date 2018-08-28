@@ -62,6 +62,8 @@ function resetCubeRotation() {
 function resetCubeZoom() {
   zoom = 0.75;
   block.style.transform = `scale(${zoom}) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(0deg)`;
+
+  //discontinue effects
 }
 
 function dragListener(e) {
